@@ -8,7 +8,7 @@
     <script src="./js/qr-scanner.umd.min.js"></script>
 </head>
 <body>
-    <video id="video"></video>
+    <video id="video" style="width:100%;height:50%"></video>
     <br>
     <button id="start" onclick="qrScanner.start()" disabled>Start scaning</button>
     <button id="stop" onclick="qrScanner.stop()">Stop scaning</button>
@@ -19,7 +19,15 @@
 <script >
     QrScanner.WORKER_PATH = './js/qr-scanner-worker.min.js'
     let videoElem = document.getElementById('video')
-    const qrScanner = new QrScanner(videoElem, result =>console.log('decodec qr code: ',result));
+    const qrScanner = new QrScanner(
+        videoElem, 
+        result =>{
+            let resultDiv = document.getElementById('result')
+            resultDiv.innerHTML = result
+        },
+        err=>console.error(err),
+
+        );
     let checkCamera = QrScanner.hasCamera()
     Promise.resolve(checkCamera)
     .then(check => {
@@ -35,6 +43,7 @@
                     liDiv.innerHTML = `<h3>${cam.label}</h3>`
                     listDiv.appendChild(liDiv)
                 })
+                qrScanner.setCamera(li[li.length -1].id)
                 btn.removeAttribute('disabled')
             })
         }else{
