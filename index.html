@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qr Scanner</title>
+    <script src="./js/qr-scanner.umd.min.js"></script>
+</head>
+<body>
+    <video id="video"></video>
+    <h1>Cameras list</h1>
+    <ul id="listCameras"></ul>
+</body>
+<script >
+    QrScanner.WORKER_PATH = './js/qr-scanner-worker.min.js'
+    let videoElem = document.getElementById('video')
+    const qrScanner = new QrScanner(videoElem, result =>console.log('decodec qr code: ',result));
+    let checkCamera = QrScanner.hasCamera()
+    Promise.resolve(checkCamera)
+    .then(check => {
+        if(check)
+        {
+            let list = QrScanner.listCameras(true)
+            Promise.resolve(list)
+            .then(li =>{
+                let listDiv = document.getElementById('listCameras')
+                li.forEach( cam =>{
+                    let liDiv = document.createElement('li')
+                    liDiv.innerHTML = `<h3>${cam.label}</h3>`
+                    listDiv.appendChild(liDiv)
+                })
+            })
+        }else{
+            alert(false)
+        }
+    })
+    .catch( err => {
+        alert(err)
+    })
+</script>
+</html>
