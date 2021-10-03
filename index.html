@@ -9,6 +9,9 @@
 </head>
 <body>
     <video id="video"></video>
+    <button id="start" onclick="qrScanner.start()" disabled>Start scaning</button>
+    <button id="stop" onclick="qrScanner.stop()">Stop scaning</button>
+    <h1 id="result"></h1>
     <h1>Cameras list</h1>
     <ul id="listCameras"></ul>
 </body>
@@ -22,6 +25,7 @@
         if(check)
         {
             let list = QrScanner.listCameras(true)
+            let btn = document.getElementById('start')
             Promise.resolve(list)
             .then(li =>{
                 let listDiv = document.getElementById('listCameras')
@@ -30,6 +34,7 @@
                     liDiv.innerHTML = `<h3>${cam.label}</h3>`
                     listDiv.appendChild(liDiv)
                 })
+                btn.removeAttribute('disabled')
             })
         }else{
             alert(false)
